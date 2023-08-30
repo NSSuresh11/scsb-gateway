@@ -1,7 +1,7 @@
 package org.recap.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModelProperty;
+
 import lombok.Data;
 
 import java.util.List;
@@ -47,11 +47,7 @@ public class ItemRequestInformation {
     @JsonIgnore
     public boolean isOwningInstitutionItem() {
         boolean bSuccess;
-        if (itemOwningInstitution.equalsIgnoreCase(requestingInstitution)) {
-            bSuccess = true;
-        } else {
-            bSuccess = false;
-        }
+        bSuccess = itemOwningInstitution.equalsIgnoreCase(requestingInstitution);
         return bSuccess;
     }
 

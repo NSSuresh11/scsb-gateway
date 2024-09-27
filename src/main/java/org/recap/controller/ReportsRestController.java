@@ -33,7 +33,13 @@ public class ReportsRestController extends AbstractController {
      */
     @PostMapping(value = "/accessionDeaccessionCounts")
     public ReportsResponse accessionDeaccessionCounts(@RequestBody ReportsRequest reportsRequest) {
-        return responseData(reportsRequest, ScsbConstants.URL_REPORTS_ACCESSION_DEACCESSION_COUNTS);
+        ReportsResponse reportsResponse = responseData(reportsRequest, ScsbConstants.URL_REPORTS_ACCESSION_DEACCESSION_COUNTS);
+        log.info(" list1 comm count >>>" + reportsResponse.getReportsInstitutionFormList().get(0).getAccessionCommittedCount());
+        log.info(" list2 comm count >>>" + reportsResponse.getReportsInstitutionFormList().get(1).getAccessionCommittedCount());
+        log.info(" list3 comm count >>>" + reportsResponse.getReportsInstitutionFormList().get(2).getAccessionCommittedCount());
+        log.info(" list4 comm count >>>" + reportsResponse.getReportsInstitutionFormList().get(3).getAccessionCommittedCount());
+
+        return reportsResponse;
     }
 
     /**

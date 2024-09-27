@@ -33,6 +33,9 @@ public class ReportsRestController extends AbstractController {
      */
     @PostMapping(value = "/accessionDeaccessionCounts")
     public ReportsResponse accessionDeaccessionCounts(@RequestBody ReportsRequest reportsRequest) {
+        log.info("Calling accessionDeaccessionCounts 1111111111");
+        System.out.println("Calling accessionDeaccessionCounts 1111111111");
+
         ReportsResponse reportsResponse = responseData(reportsRequest, ScsbConstants.URL_REPORTS_ACCESSION_DEACCESSION_COUNTS);
         log.info(" list1 comm count >>>" + reportsResponse.getReportsInstitutionFormList().get(0).getAccessionCommittedCount());
         log.info(" list2 comm count >>>" + reportsResponse.getReportsInstitutionFormList().get(1).getAccessionCommittedCount());
@@ -155,6 +158,10 @@ public class ReportsRestController extends AbstractController {
             log.error(ScsbCommonConstants.LOG_ERROR, e);
             reportsResponse.setMessage(e.getMessage());
         }
+        log.info(" list1 comm count responseData >>>" + reportsResponse.getReportsInstitutionFormList().get(0).getAccessionCommittedCount());
+        log.info(" list2 comm count responseData >>>" + reportsResponse.getReportsInstitutionFormList().get(1).getAccessionCommittedCount());
+        log.info(" list3 comm count responseData >>>" + reportsResponse.getReportsInstitutionFormList().get(2).getAccessionCommittedCount());
+        log.info(" list4 comm count responseData >>>" + reportsResponse.getReportsInstitutionFormList().get(3).getAccessionCommittedCount());
         return reportsResponse;
     }
 }

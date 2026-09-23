@@ -14,30 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.recap.ScsbCommonConstants;
 import org.recap.ScsbConstants;
 import org.recap.controller.AbstractController;
-import org.recap.model.AbstractResponseItem;
-import org.recap.model.BulkRequestInformation;
-import org.recap.model.BulkRequestResponse;
-import org.recap.model.CancelRequestResponse;
-import org.recap.model.ItemCheckInRequest;
-import org.recap.model.ItemCheckOutRequest;
-import org.recap.model.ItemCheckinResponse;
-import org.recap.model.ItemCheckoutResponse;
-import org.recap.model.ItemCreateBibRequest;
-import org.recap.model.ItemCreateBibResponse;
-import org.recap.model.ItemHoldCancelRequest;
-import org.recap.model.ItemHoldRequest;
-import org.recap.model.ItemHoldResponse;
-import org.recap.model.ItemInformationRequest;
-import org.recap.model.ItemInformationResponse;
-import org.recap.model.ItemRecalRequest;
-import org.recap.model.ItemRecallResponse;
-import org.recap.model.ItemRefileRequest;
-import org.recap.model.ItemRefileResponse;
-import org.recap.model.ItemRequestInformation;
-import org.recap.model.ItemResponseInformation;
-import org.recap.model.PatronInformationRequest;
-import org.recap.model.PatronInformationResponse;
-import org.recap.model.ReplaceRequest;
+import org.recap.model.*;
 import org.recap.service.RequestItemService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -704,5 +682,47 @@ public class RequestItemRestController extends AbstractController  {
         }
         return itemResponseInformation;
     }
+
+    /**
+     * This method will call scsb-circ microservice to get item request status in scsb.
+     *
+     * @param itemRequestStatus the item request status
+     * @return the response entity
+     */
+    @PostMapping(value = "/requestStatus", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "requestStatus",
+            description ="The Request Status status API returns the Request status of the item in SCSB. It is likely to be used in partner ILS' Discovery systems to retrieve and display request statuses.")
+    @ApiResponse(responseCode = "200", description = "OK")
+    @ResponseBody
+    public ResponseEntity itemRequestStatus(@Parameter(description = "Item Barcodes with ',' separated", required = true, name = "itemBarcodes") @RequestBody RequestStatusRequest itemRequestStatus) {
+        String response;
+        RequestStatusResponse requestStatusResponse;
+        HttpEntity<RequestStatusResponse> requestStatusResponseEntity;
+        requestStatusResponse = null;
+
+        try {
+            if (itemRequestStatus == null || itemRequestStatus.getBarcodes() == null
+                    || itemRequestStatus.getBarcodes().isEmpty()) {
+                return new ResponseEntity<>(ScsbCommonConstants.ITEM_BARCDE_DOESNOT_EXIST, getHttpHeaders(), HttpStatus.BAD_REQUEST);
+            }
+            HttpEntity request = new HttpEntity<>(itemRequestStatus);
+            requestStatusResponseEntity = restTemplate.exchange(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_STATUS_INFORMATION, HttpMethod.POST, request, RequestStatusResponse.class);
+            requestStatusResponse = requestStatusResponseEntity.getBody();
+
+        } catch (HttpServerErrorException httpServerErrorException) {
+            log.error(ScsbCommonConstants.LOG_ERROR, httpServerErrorException);
+            return new ResponseEntity<>(httpServerErrorException.getResponseBodyAsString(), getHttpHeaders(), httpServerErrorException.getStatusCode());
+        } catch (RuntimeException exception) {
+            log.error(ScsbCommonConstants.LOG_ERROR, exception);
+            return new ResponseEntity<>(ScsbCommonConstants.SCSB_SOLR_CLIENT_SERVICE_UNAVAILABLE, getHttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE);
+        }
+        if (requestStatusResponse == null) {
+            return new ResponseEntity<>(ScsbCommonConstants.ITEM_BARCDE_DOESNOT_EXIST, getHttpHeaders(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(requestStatusResponse, getHttpHeaders(), HttpStatus.OK);
+        }
+    }
+
+
 
 }

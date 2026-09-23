@@ -18,6 +18,7 @@ public final class ScsbConstants {
     public static final String URL_REQUEST_PATRON_INFORMATION = "requestItem/patronInformation";
     public static final String URL_REQUEST_RE_FILE = "requestItem/refile";
     public static final String URL_REQUEST_ITEM_VALIDATE_ITEM_REQUEST = "requestItem/validateItemRequest";
+    public static final String URL_REQUEST_ITEM_STATUS_INFORMATION = "requestItem/requestStatus";
     public static final String URL_REQUEST_CANCEL = "cancelRequest/cancel";
     public static final String URL_REQUEST_REPLACE = "requestItem/replaceRequest";
     public static  final String URL_SUBMIT_COLLECTION_REPORT = "/reportGeneration/submitCollectionReport";

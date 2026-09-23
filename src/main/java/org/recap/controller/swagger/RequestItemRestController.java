@@ -705,8 +705,7 @@ public class RequestItemRestController extends AbstractController  {
                     || itemRequestStatus.getBarcodes().isEmpty()) {
                 return new ResponseEntity<>(ScsbCommonConstants.ITEM_BARCDE_DOESNOT_EXIST, getHttpHeaders(), HttpStatus.BAD_REQUEST);
             }
-            HttpEntity request = new HttpEntity<>(itemRequestStatus);
-            requestStatusResponseEntity = restTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_STATUS_INFORMATION, request, RequestStatusResponse.class);
+            requestStatusResponseEntity = restTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_STATUS_INFORMATION, itemRequestStatus, RequestStatusResponse.class);
 
             requestStatusResponse = requestStatusResponseEntity.getBody();
 

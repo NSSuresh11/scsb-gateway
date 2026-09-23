@@ -695,13 +695,14 @@ public class RequestItemRestController extends AbstractController  {
     @ApiResponse(responseCode = "200", description = "OK")
     @ResponseBody
     public ResponseEntity itemRequestStatus(@Parameter(description = "Item Barcodes with ',' separated", required = true, name = "itemBarcodes") @RequestBody RequestStatusRequest itemRequestStatus) {
-        String requestStatusResponse = null;
+       // String requestStatusResponse = null;
+        RequestStatusResponse requestStatusResponse = null;
         try {
             if (itemRequestStatus == null || itemRequestStatus.getBarcodes() == null
                     || itemRequestStatus.getBarcodes().isEmpty()) {
                 return new ResponseEntity<>(ScsbCommonConstants.ITEM_BARCDE_DOESNOT_EXIST, getHttpHeaders(), HttpStatus.BAD_REQUEST);
             }
-            requestStatusResponse = restTemplate.postForObject(getScsbCircUrl() + "requestItem/requestStatus", itemRequestStatus, String.class);
+            requestStatusResponse = restTemplate.postForObject(getScsbCircUrl() + "requestItem/requestStatus", itemRequestStatus, RequestStatusResponse.class);
         } catch (HttpServerErrorException httpServerErrorException) {
             log.error(ScsbCommonConstants.LOG_ERROR, httpServerErrorException);
             return new ResponseEntity<>(httpServerErrorException.getResponseBodyAsString(), getHttpHeaders(), httpServerErrorException.getStatusCode());

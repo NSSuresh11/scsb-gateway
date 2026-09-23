@@ -697,7 +697,7 @@ public class RequestItemRestController extends AbstractController  {
     public ResponseEntity itemRequestStatus(@Parameter(description = "Item Barcodes with ',' separated", required = true, name = "itemBarcodes") @RequestBody RequestStatusRequest itemRequestStatus) {
         String response;
         RequestStatusResponse requestStatusResponse;
-        HttpEntity<RequestStatusResponse> requestStatusResponseEntity;
+        ResponseEntity<RequestStatusResponse> requestStatusResponseEntity;
         requestStatusResponse = null;
 
         try {

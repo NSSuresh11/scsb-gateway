@@ -696,19 +696,14 @@ public class RequestItemRestController extends AbstractController  {
     @ResponseBody
     public ResponseEntity itemRequestStatus(@Parameter(description = "Item Barcodes with ',' separated", required = true, name = "itemBarcodes") @RequestBody RequestStatusRequest itemRequestStatus) {
         String response;
-        RequestStatusResponse requestStatusResponse;
-        ResponseEntity<RequestStatusResponse> requestStatusResponseEntity;
-        requestStatusResponse = null;
-
+        RequestStatusResponse requestStatusResponse = null;
         try {
             if (itemRequestStatus == null || itemRequestStatus.getBarcodes() == null
                     || itemRequestStatus.getBarcodes().isEmpty()) {
                 return new ResponseEntity<>(ScsbCommonConstants.ITEM_BARCDE_DOESNOT_EXIST, getHttpHeaders(), HttpStatus.BAD_REQUEST);
             }
-            requestStatusResponseEntity = restTemplate.postForEntity(getScsbCircUrl() + ScsbConstants.URL_REQUEST_ITEM_STATUS_INFORMATION, itemRequestStatus, RequestStatusResponse.class);
-
-            requestStatusResponse = requestStatusResponseEntity.getBody();
-
+            ResponseEntity<RequestStatusResponse> responseEntity = restTemplate.postForEntity(getScsbCircUrl() + "requestItem/refileItemInILS", itemRequestStatus, RequestStatusResponse.class);
+            requestStatusResponse = responseEntity.getBody();
         } catch (HttpServerErrorException httpServerErrorException) {
             log.error(ScsbCommonConstants.LOG_ERROR, httpServerErrorException);
             return new ResponseEntity<>(httpServerErrorException.getResponseBodyAsString(), getHttpHeaders(), httpServerErrorException.getStatusCode());
@@ -722,7 +717,5 @@ public class RequestItemRestController extends AbstractController  {
             return new ResponseEntity<>(requestStatusResponse, getHttpHeaders(), HttpStatus.OK);
         }
     }
-
-
 
 }

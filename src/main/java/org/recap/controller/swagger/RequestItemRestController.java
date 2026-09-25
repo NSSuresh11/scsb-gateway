@@ -701,6 +701,9 @@ public class RequestItemRestController extends AbstractController  {
                     || itemRequestStatus.getBarcodes().isEmpty()) {
                 return new ResponseEntity<>(ScsbCommonConstants.ITEM_BARCDE_DOESNOT_EXIST, getHttpHeaders(), HttpStatus.BAD_REQUEST);
             }
+            else if (itemRequestStatus.getBarcodes().size() > 100) {
+                return new ResponseEntity<>("Maximum Allowed limit of 100 Barcodes exceeded", getHttpHeaders(), HttpStatus.BAD_REQUEST);
+            }
             requestStatusResponse = restTemplate.postForObject(getScsbCircUrl() + "requestItem/requestStatus", itemRequestStatus, String.class);
         } catch (HttpServerErrorException httpServerErrorException) {
             log.error(ScsbCommonConstants.LOG_ERROR, httpServerErrorException);
